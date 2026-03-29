@@ -3,102 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landfill Search — Global Landfill Database</title>
+    <title>Landfill Search — Automated Global Landfill Database</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb; --primary-dark: #1e40af;
-            --bg: #0f172a; --bg2: #1e293b; --bg3: #334155;
-            --card: #1e293b; --border: #334155;
-            --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
-            --accent: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+            --primary: #2563eb; --primary-light: #eff6ff; --primary-hover: #1d4ed8;
+            --bg: #fafbfc; --bg2: #ffffff; --bg3: #f1f5f9;
+            --card: #ffffff; --border: #e2e8f0;
+            --text: #1e293b; --text2: #475569; --text3: #94a3b8;
+            --accent: #0ea5e9; --green: #10b981; --amber: #f59e0b; --rose: #f43f5e;
+            --radius: 14px;
+            --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,.06);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
 
         /* Hero */
         .hero {
-            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #0c4a6e 100%);
-            padding: 80px 24px 60px;
+            background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 50%, #fff7ed 100%);
+            padding: 80px 24px 64px;
             text-align: center;
             border-bottom: 1px solid var(--border);
         }
-        .hero-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px;
-                       font-weight: 600; background: rgba(56,189,248,.15); color: var(--accent);
-                       border: 1px solid rgba(56,189,248,.3); margin-bottom: 20px; letter-spacing: .5px; }
-        .hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px;
-                    background: linear-gradient(135deg, #f1f5f9, #38bdf8); -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 18px; color: var(--text2); max-width: 640px; margin: 0 auto 32px; line-height: 1.6; }
-        .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .btn { padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 600;
-               text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-outline:hover { border-color: var(--text2); background: var(--bg2); }
+        .hero-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;
+            background:white; color:var(--primary); border:1px solid var(--border);
+            box-shadow:var(--shadow); margin-bottom:24px;
+        }
+        .hero-badge .dot { width:8px; height:8px; border-radius:50%; background:var(--green); }
+        .hero h1 {
+            font-size:52px; font-weight:800; letter-spacing:-1.5px; margin-bottom:16px;
+            color:var(--text);
+        }
+        .hero h1 span { color:var(--primary); }
+        .hero p { font-size:18px; color:var(--text2); max-width:660px; margin:0 auto 36px; line-height:1.7; }
+        .hero-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+        .btn {
+            padding:13px 28px; border-radius:10px; font-size:14px; font-weight:600;
+            text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:8px;
+        }
+        .btn-primary { background:var(--primary); color:white; box-shadow:0 2px 8px rgba(37,99,235,.3); }
+        .btn-primary:hover { background:var(--primary-hover); transform:translateY(-1px); }
+        .btn-outline { background:white; color:var(--text); border:1px solid var(--border); }
+        .btn-outline:hover { border-color:var(--text3); box-shadow:var(--shadow); }
 
         /* Stats */
-        .stats { display: flex; justify-content: center; gap: 48px; padding: 40px 24px;
-                  border-bottom: 1px solid var(--border); }
-        .stat { text-align: center; }
-        .stat .num { font-size: 36px; font-weight: 800; color: var(--accent); }
-        .stat .label { font-size: 13px; color: var(--text3); margin-top: 4px; text-transform: uppercase;
-                        letter-spacing: .5px; }
+        .stats {
+            display:flex; justify-content:center; gap:0;
+            background:white; border-bottom:1px solid var(--border); box-shadow:var(--shadow);
+        }
+        .stat {
+            text-align:center; padding:28px 48px;
+            border-right:1px solid var(--border);
+        }
+        .stat:last-child { border-right:none; }
+        .stat .num { font-size:36px; font-weight:800; color:var(--primary); }
+        .stat .label { font-size:12px; color:var(--text3); margin-top:4px; text-transform:uppercase; letter-spacing:.5px; font-weight:600; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .container { max-width:1100px; margin:0 auto; padding:0 24px; }
+        .section { padding:64px 0; }
+        .section-title { font-size:30px; font-weight:700; margin-bottom:8px; color:var(--text); }
+        .section-desc { color:var(--text2); margin-bottom:36px; font-size:15px; line-height:1.6; }
 
-        /* Section */
-        .section { padding: 60px 0; }
-        .section-title { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
-        .section-desc { color: var(--text2); margin-bottom: 32px; font-size: 15px; }
-
-        /* Demo iframe */
-        .demo-frame { width: 100%; height: 600px; border: 1px solid var(--border); border-radius: 12px;
-                       overflow: hidden; background: white; }
-        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .demo-tabs { display: flex; gap: 0; }
-        .demo-tab { padding: 8px 20px; font-size: 13px; font-weight: 500; border: 1px solid var(--border);
-                     background: var(--bg2); color: var(--text2); cursor: pointer; }
-        .demo-tab:first-child { border-radius: 6px 0 0 6px; }
-        .demo-tab:last-child { border-radius: 0 6px 6px 0; }
-        .demo-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        /* Pipeline */
+        .pipeline {
+            display:flex; align-items:center; gap:0; overflow-x:auto; padding:8px 0;
+            margin-bottom:12px;
+        }
+        .pipe-step {
+            background:white; border:1px solid var(--border); border-radius:12px; padding:20px 24px;
+            min-width:160px; text-align:center; box-shadow:var(--shadow); position:relative;
+        }
+        .pipe-step .icon { font-size:28px; margin-bottom:8px; }
+        .pipe-step h4 { font-size:14px; font-weight:600; margin-bottom:4px; }
+        .pipe-step p { font-size:11px; color:var(--text3); }
+        .pipe-arrow { font-size:24px; color:var(--text3); padding:0 8px; flex-shrink:0; }
 
         /* Features */
-        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .feature { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
-        .feature .icon { font-size: 28px; margin-bottom: 12px; }
-        .feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .feature p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+        .features { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .feature {
+            background:white; border:1px solid var(--border); border-radius:var(--radius);
+            padding:28px; box-shadow:var(--shadow); transition:box-shadow .2s;
+        }
+        .feature:hover { box-shadow:var(--shadow-md); }
+        .feature .icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center;
+                          justify-content:center; font-size:22px; margin-bottom:14px; }
+        .feature .icon-blue { background:#eff6ff; }
+        .feature .icon-green { background:#ecfdf5; }
+        .feature .icon-amber { background:#fffbeb; }
+        .feature .icon-rose { background:#fff1f2; }
+        .feature .icon-purple { background:#faf5ff; }
+        .feature .icon-cyan { background:#ecfeff; }
+        .feature h3 { font-size:15px; font-weight:600; margin-bottom:8px; }
+        .feature p { font-size:13px; color:var(--text2); line-height:1.6; }
 
-        /* Architecture */
-        .arch { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px;
-                 font-family: 'Menlo', monospace; font-size: 13px; color: var(--accent); line-height: 1.8;
-                 overflow-x: auto; white-space: pre; }
+        /* Search Sources */
+        .sources { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .source-card {
+            background:white; border:1px solid var(--border); border-radius:var(--radius);
+            padding:24px; box-shadow:var(--shadow); display:flex; gap:16px; align-items:start;
+        }
+        .source-icon { font-size:32px; flex-shrink:0; }
+        .source-card h3 { font-size:14px; font-weight:600; margin-bottom:4px; }
+        .source-card p { font-size:12px; color:var(--text2); line-height:1.5; }
+        .source-card .tag { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px;
+                             display:inline-block; margin-top:8px; }
+        .tag-active { background:#ecfdf5; color:#059669; }
+        .tag-planned { background:#fffbeb; color:#d97706; }
 
-        /* How to use */
-        .usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .usage-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
-        .usage-card .tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px;
-                            display: inline-block; margin-bottom: 12px; }
-        .usage-card .tag-app { background: rgba(74,222,128,.15); color: var(--green); }
-        .usage-card .tag-web { background: rgba(56,189,248,.15); color: var(--accent); }
-        .usage-card .tag-cli { background: rgba(251,191,36,.15); color: var(--amber); }
-        .usage-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-        .usage-card p { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
-        .usage-card code { font-size: 12px; background: var(--bg); padding: 8px 12px; border-radius: 6px;
-                            display: block; color: var(--accent); }
+        /* Indicators */
+        .indicators { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+        .indicator-group {
+            background:white; border:1px solid var(--border); border-radius:var(--radius);
+            padding:24px; box-shadow:var(--shadow);
+        }
+        .indicator-group h3 { font-size:15px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+        .indicator-group h3 .badge { font-size:11px; padding:2px 10px; border-radius:10px; font-weight:600; }
+        .badge-core { background:#eff6ff; color:var(--primary); }
+        .badge-ext { background:#faf5ff; color:#7c3aed; }
+        .ind-item { display:flex; gap:12px; padding:10px 0; border-bottom:1px solid #f1f5f9; }
+        .ind-item:last-child { border-bottom:none; }
+        .ind-name { font-size:13px; font-weight:600; min-width:140px; color:var(--text); }
+        .ind-desc { font-size:12px; color:var(--text2); }
+        .ind-field { font-size:11px; color:var(--text3); font-family:'Menlo',monospace; }
+
+        /* Demo */
+        .demo-frame {
+            width:100%; height:560px; border:1px solid var(--border); border-radius:var(--radius);
+            overflow:hidden; background:white; box-shadow:var(--shadow-md);
+        }
+        .demo-note { font-size:12px; color:var(--text3); margin-top:8px; text-align:center; }
+
+        /* Usage */
+        .usage-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        .usage-card {
+            background:white; border:1px solid var(--border); border-radius:var(--radius);
+            padding:28px; box-shadow:var(--shadow);
+        }
+        .usage-card .tag { font-size:11px; font-weight:600; padding:3px 12px; border-radius:12px;
+                            display:inline-block; margin-bottom:14px; }
+        .tag-app { background:#ecfdf5; color:#059669; }
+        .tag-web { background:#eff6ff; color:var(--primary); }
+        .tag-cli { background:#fffbeb; color:#d97706; }
+        .usage-card h3 { font-size:16px; font-weight:600; margin-bottom:8px; }
+        .usage-card p { font-size:13px; color:var(--text2); line-height:1.5; margin-bottom:14px; }
+        .usage-card code { font-size:12px; background:var(--bg3); padding:10px 14px; border-radius:8px;
+                            display:block; color:var(--text); font-family:'Menlo',monospace; }
 
         /* Footer */
-        .footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center;
-                   color: var(--text3); font-size: 13px; }
-        .footer a { color: var(--accent); text-decoration: none; }
+        .footer { border-top:1px solid var(--border); padding:36px 24px; text-align:center;
+                   color:var(--text3); font-size:13px; background:white; }
+        .footer a { color:var(--primary); text-decoration:none; }
+        .footer a:hover { text-decoration:underline; }
 
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 32px; }
-            .stats { gap: 24px; flex-wrap: wrap; }
-            .features, .usage-grid { grid-template-columns: 1fr; }
-            .demo-frame { height: 400px; }
+        @media (max-width:768px) {
+            .hero h1 { font-size:32px; }
+            .stats { flex-wrap:wrap; }
+            .stat { padding:20px 24px; }
+            .features, .sources, .indicators, .usage-grid { grid-template-columns:1fr; }
+            .pipeline { flex-wrap:wrap; }
+            .demo-frame { height:350px; }
         }
     </style>
 </head>
@@ -106,115 +172,98 @@
 
     <!-- Hero -->
     <div class="hero">
-        <div class="hero-badge">macOS · Open Source · Python</div>
-        <h1>Landfill Search</h1>
-        <p>Automated global landfill database builder. Scrapes Google Search, Scholar &amp; Maps to collect landfill operational data with full source traceability.</p>
+        <div class="hero-badge"><div class="dot"></div> Open Source · Python · macOS</div>
+        <h1>Landfill <span>Search</span></h1>
+        <p>Automated global landfill database builder. Uses browser automation to scrape multiple search engines, extract structured data with source traceability, and generate interactive visualizations.</p>
         <div class="hero-actions">
             <a href="#demo" class="btn btn-primary">🗺️ View Demo</a>
             <a href="https://github.com/xiaomabufei/Landfill_Search" class="btn btn-outline" target="_blank">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                GitHub
+                Source Code
             </a>
         </div>
     </div>
 
     <!-- Stats -->
     <div class="stats">
-        <div class="stat"><div class="num">179</div><div class="label">Italy Landfills</div></div>
-        <div class="stat"><div class="num">18</div><div class="label">Indicators</div></div>
+        <div class="stat"><div class="num">18</div><div class="label">Data Indicators</div></div>
         <div class="stat"><div class="num">3</div><div class="label">Search Engines</div></div>
-        <div class="stat"><div class="num">29</div><div class="label">Tests Passed</div></div>
+        <div class="stat"><div class="num">5</div><div class="label">Input Formats</div></div>
+        <div class="stat"><div class="num">3</div><div class="label">Usage Modes</div></div>
     </div>
 
-    <!-- Demo -->
-    <div class="section" id="demo">
-        <div class="container">
-            <div class="demo-header">
-                <div>
-                    <div class="section-title">Live Demo — Italy</div>
-                    <div class="section-desc">Interactive map with real search results from Italian landfills</div>
-                </div>
-            </div>
-            <iframe class="demo-frame" src="../assets/ITA.html" loading="lazy"></iframe>
-        </div>
-    </div>
-
-    <!-- Features -->
+    <!-- Pipeline -->
     <div class="section">
         <div class="container">
-            <div class="section-title">Features</div>
-            <div class="section-desc">End-to-end automated pipeline from raw data to interactive visualization</div>
-            <div class="features">
-                <div class="feature">
-                    <div class="icon">🔍</div>
-                    <h3>Automated Search</h3>
-                    <p>Playwright drives Chrome/WebKit to scrape Google Search, Google Scholar, and Google Maps. Bilingual keyword extraction (EN + IT).</p>
-                </div>
-                <div class="feature">
-                    <div class="icon">✅</div>
-                    <h3>Data Validation</h3>
-                    <p>4-dimension check: format, logic (start_year ≤ final_year), completeness, and source verification. Errors highlighted in bold red.</p>
-                </div>
-                <div class="feature">
-                    <div class="icon">🗺️</div>
-                    <h3>Map Visualization</h3>
-                    <p>CartoDB + Leaflet.js interactive map. Color-coded markers, click for details with source links. Chart.js statistics.</p>
-                </div>
-                <div class="feature">
-                    <div class="icon">🔄</div>
-                    <h3>Resume & Incremental</h3>
-                    <p>Checkpoint resume — interrupted searches continue from where they stopped. Results saved after each landfill.</p>
-                </div>
-                <div class="feature">
-                    <div class="icon">🖥️</div>
-                    <h3>Multi-Browser Parallel</h3>
-                    <p>Auto-detects installed browsers (Chrome, WebKit, Firefox). Parallel workers with staggered delays to avoid detection.</p>
-                </div>
-                <div class="feature">
-                    <div class="icon">📋</div>
-                    <h3>Rich Logging</h3>
-                    <p>Timestamped logs with progress bar, ETA, collapsible details. Separate error log for quick triage.</p>
-                </div>
+            <div class="section-title">How It Works</div>
+            <div class="section-desc">End-to-end automated pipeline — from raw data to interactive visualization</div>
+            <div class="pipeline">
+                <div class="pipe-step"><div class="icon">📂</div><h4>Input</h4><p>.xlsx .csv .tsv .json</p></div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-step"><div class="icon">🔍</div><h4>Search</h4><p>Google · Scholar · Maps</p></div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-step"><div class="icon">⚙️</div><h4>Extract</h4><p>Bilingual keyword rules</p></div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-step"><div class="icon">✅</div><h4>Validate</h4><p>Format · Logic · Source</p></div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-step"><div class="icon">🗺️</div><h4>Visualize</h4><p>Map · Charts · JSON</p></div>
             </div>
         </div>
     </div>
 
-    <!-- Architecture -->
-    <div class="section">
+    <!-- Search Sources -->
+    <div class="section" style="background:var(--bg3); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
         <div class="container">
-            <div class="section-title">Architecture</div>
-            <div class="section-desc">Simple pipeline, powerful automation</div>
-            <div class="arch">Input Data ──→ Auto Search ──→ Extract ──→ Validate ──→ Output
- .xlsx          Playwright      Keyword     Format      JSON (traceable)
- .csv           Google Search   Rules       Logic       HTML (map + charts)
- .tsv           Scholar/Maps    EN + IT     Sources     Logs (timestamped)
- .json</div>
-        </div>
-    </div>
-
-    <!-- How to Use -->
-    <div class="section">
-        <div class="container">
-            <div class="section-title">3 Ways to Use</div>
-            <div class="section-desc">Choose what fits your workflow</div>
-            <div class="usage-grid">
-                <div class="usage-card">
-                    <span class="tag tag-app">macOS App</span>
-                    <h3>Desktop GUI</h3>
-                    <p>Build as a native macOS app. Enter a landfill name or select a file, click search.</p>
-                    <code>./build_app.sh</code>
+            <div class="section-title">Search Sources</div>
+            <div class="section-desc">Multiple engines for maximum data coverage, driven by Playwright browser automation</div>
+            <div class="sources">
+                <div class="source-card">
+                    <div class="source-icon">🔍</div>
+                    <div>
+                        <h3>Google Search</h3>
+                        <p>General web search for government reports, news articles, official websites, and municipal documents. Primary data source for most indicators.</p>
+                        <span class="tag tag-active">Active</span>
+                    </div>
                 </div>
-                <div class="usage-card">
-                    <span class="tag tag-web">Web UI</span>
-                    <h3>Browser Interface</h3>
-                    <p>Flask web app with real-time logs, file upload, and result links.</p>
-                    <code>python web_app.py</code>
+                <div class="source-card">
+                    <div class="source-icon">📚</div>
+                    <div>
+                        <h3>Google Scholar</h3>
+                        <p>Academic papers and research publications. Best for technical parameters like gas collection rates, emission data, and environmental assessments.</p>
+                        <span class="tag tag-active">Active</span>
+                    </div>
                 </div>
-                <div class="usage-card">
-                    <span class="tag tag-cli">CLI</span>
-                    <h3>Command Line</h3>
-                    <p>Full control with flags: workers, range, engines, batch size.</p>
-                    <code>python main.py data/raw/ITA.xlsx --scrape --headed</code>
+                <div class="source-card">
+                    <div class="source-icon">📍</div>
+                    <div>
+                        <h3>Google Maps</h3>
+                        <p>Geographic verification, operational status confirmation, place type classification, and address resolution for each landfill site.</p>
+                        <span class="tag tag-active">Active</span>
+                    </div>
+                </div>
+                <div class="source-card">
+                    <div class="source-icon">🏛️</div>
+                    <div>
+                        <h3>ISPRA Database</h3>
+                        <p>Italian National Waste Registry. Official government source for capacity, operator, waste types, and regulatory status.</p>
+                        <span class="tag tag-planned">Planned</span>
+                    </div>
+                </div>
+                <div class="source-card">
+                    <div class="source-icon">🔑</div>
+                    <div>
+                        <h3>Google Custom Search API</h3>
+                        <p>Programmatic search API as a fallback. 100 free queries/day. Useful when browser automation hits rate limits.</p>
+                        <span class="tag tag-planned">Planned</span>
+                    </div>
+                </div>
+                <div class="source-card">
+                    <div class="source-icon">🤖</div>
+                    <div>
+                        <h3>LLM-Assisted Extraction</h3>
+                        <p>Claude API for semantic understanding of complex text where keyword rules fail. Smart inference from indirect descriptions.</p>
+                        <span class="tag tag-planned">Planned</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,16 +272,131 @@
     <!-- Data Indicators -->
     <div class="section">
         <div class="container">
-            <div class="section-title">18 Data Indicators</div>
-            <div class="section-desc">7 core + 11 extended, each with source reference</div>
-            <div class="features" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="section-title">Data Indicators</div>
+            <div class="section-desc">18 indicators per landfill — each core indicator includes a source reference (URL + type) for full traceability</div>
+            <div class="indicators">
+                <div class="indicator-group">
+                    <h3>Core Indicators <span class="badge badge-core">7 items · with source ref</span></h3>
+                    <div class="ind-item">
+                        <div class="ind-name">Landfill Type</div>
+                        <div><div class="ind-desc">Classification as <b>sanitary landfill</b> (engineered, lined) or <b>dump</b> (uncontrolled). Critical for emission factor calculation in GHG inventories.</div><div class="ind-field">landfill_type → dump | sanitary landfill</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Gas Collection</div>
+                        <div><div class="ind-desc">Whether the site has landfill gas (LFG) capture systems. Determines methane emission reduction potential.</div><div class="ind-field">has_gas_collection → yes | no</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Technology Type</div>
+                        <div><div class="ind-desc"><b>Flaring</b>: burn-off only. <b>Electrification</b>: gas-to-electricity via engines. <b>Purification</b>: upgrade to biomethane for pipeline injection.</div><div class="ind-field">gas_collection_technology → flaring | electrification | purification</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Collection Rate</div>
+                        <div><div class="ind-desc">Percentage of generated landfill gas that is actually captured. Typically 50-85% for well-managed sites. Key parameter for emission models.</div><div class="ind-field">gas_collection_rate → percentage</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Start Year</div>
+                        <div><div class="ind-desc">Year the landfill began accepting waste. Used to calculate waste-in-place and estimate current gas generation phase.</div><div class="ind-field">start_year → year</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Closure Year</div>
+                        <div><div class="ind-desc">Year the site stopped accepting waste, or null if still operational. Post-closure sites still generate gas for 20-30 years.</div><div class="ind-field">final_year → year | null</div></div>
+                    </div>
+                    <div class="ind-item">
+                        <div class="ind-name">Gas System Start</div>
+                        <div><div class="ind-desc">Year gas collection equipment was installed. Used to determine how long emissions were uncontrolled before capture began.</div><div class="ind-field">gas_collection_start_year → year | null</div></div>
+                    </div>
+                </div>
+                <div class="indicator-group">
+                    <h3>Extended Indicators <span class="badge badge-ext">11 items · collected when available</span></h3>
+                    <div class="ind-item"><div class="ind-name">Capacity</div><div><div class="ind-desc">Total engineered volume in cubic meters. Indicates site scale and remaining lifetime.</div><div class="ind-field">waste_capacity_m3</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Annual Intake</div><div><div class="ind-desc">Tons of waste received per year. Used for waste accumulation modeling.</div><div class="ind-field">annual_waste_intake_tons</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Waste Types</div><div><div class="ind-desc">Municipal solid waste, industrial, hazardous, inert, etc. Affects gas composition and generation rates.</div><div class="ind-field">waste_types_accepted</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Area</div><div><div class="ind-desc">Site footprint in hectares. Correlates with capacity and environmental impact zone.</div><div class="ind-field">area_hectares</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Operator</div><div><div class="ind-desc">Company or municipality managing the site. Useful for cross-referencing data sources.</div><div class="ind-field">operator</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Depth</div><div><div class="ind-desc">Fill depth in meters. Deeper sites generate gas longer and have different leachate characteristics.</div><div class="ind-field">depth_meters</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Liner Type</div><div><div class="ind-desc">HDPE, clay, composite, or none. Determines groundwater contamination risk.</div><div class="ind-field">liner_type</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Leachate Treatment</div><div><div class="ind-desc">How contaminated water is managed. On-site treatment, off-site disposal, or recirculation.</div><div class="ind-field">leachate_treatment</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Status</div><div><div class="ind-desc">Current operational phase: active, closed, or post-closure monitoring.</div><div class="ind-field">status → operational | closed | post-closure</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Environmental Issues</div><div><div class="ind-desc">Known contamination, violations, odor complaints, or legal proceedings.</div><div class="ind-field">environmental_issues</div></div></div>
+                    <div class="ind-item"><div class="ind-name">Methane Emissions</div><div><div class="ind-desc">Estimated annual CH₄ release in tons. The primary GHG metric for landfill climate impact.</div><div class="ind-field">methane_emission_tons_year</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="section" style="background:var(--bg3); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        <div class="container">
+            <div class="section-title">Key Features</div>
+            <div class="section-desc">Built for reliability, traceability, and ease of use</div>
+            <div class="features">
                 <div class="feature">
-                    <h3>Core (7)</h3>
-                    <p>Landfill type · Gas collection (yes/no) · Technology type (flaring/electrification/purification) · Collection rate · Start year · Closure year · Gas system start year</p>
+                    <div class="icon icon-blue">🔍</div>
+                    <h3>Multi-Engine Search</h3>
+                    <p>Playwright automates Chrome/WebKit/Firefox to scrape Google Search, Scholar, and Maps. Bilingual keyword extraction (EN + target language).</p>
                 </div>
                 <div class="feature">
-                    <h3>Extended (11)</h3>
-                    <p>Capacity (m³) · Annual intake (tons) · Waste types · Area (ha) · Operator · Depth · Liner type · Leachate treatment · Status · Environmental issues · Methane emissions</p>
+                    <div class="icon icon-green">✅</div>
+                    <h3>4D Validation</h3>
+                    <p>Format checks, logic validation (start ≤ end year), completeness tracking, and source verification. Errors highlighted in bold red.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon icon-amber">🗺️</div>
+                    <h3>Interactive Maps</h3>
+                    <p>CartoDB + Leaflet.js map with color-coded markers. Click for details + source links. Chart.js statistics dashboard.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon icon-rose">🔄</div>
+                    <h3>Checkpoint Resume</h3>
+                    <p>Interrupt anytime with Ctrl+C. Next run automatically resumes from where it stopped. Results saved after each landfill.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon icon-purple">🖥️</div>
+                    <h3>Multi-Browser Parallel</h3>
+                    <p>Auto-detects installed browsers. Multiple workers with different fingerprints and staggered delays to avoid detection.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon icon-cyan">📋</div>
+                    <h3>Rich Logging</h3>
+                    <p>Timestamped logs with progress bar, ETA, collapsible details per landfill, and separate error log for quick triage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo -->
+    <div class="section" id="demo">
+        <div class="container">
+            <div class="section-title">Demo — Italy 🇮🇹</div>
+            <div class="section-desc">Sample results from Italian landfill search. The system works for any country — just provide a data file.</div>
+            <iframe class="demo-frame" src="assets/ITA.html" loading="lazy"></iframe>
+            <div class="demo-note">Interactive map · Click markers for details · Scroll to see charts and data table</div>
+        </div>
+    </div>
+
+    <!-- Usage -->
+    <div class="section" style="background:var(--bg3); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        <div class="container">
+            <div class="section-title">3 Ways to Use</div>
+            <div class="section-desc">Choose the interface that fits your workflow</div>
+            <div class="usage-grid">
+                <div class="usage-card">
+                    <span class="tag tag-app">macOS App</span>
+                    <h3>Desktop GUI</h3>
+                    <p>Build as a native macOS app. Enter a landfill name or select a file, click search. Real-time progress in app window.</p>
+                    <code>./build_app.sh</code>
+                </div>
+                <div class="usage-card">
+                    <span class="tag tag-web">Web UI</span>
+                    <h3>Browser Interface</h3>
+                    <p>Flask web app at localhost:5000. Upload files, view real-time logs, download results. Works on any device in your network.</p>
+                    <code>python web_app.py</code>
+                </div>
+                <div class="usage-card">
+                    <span class="tag tag-cli">Command Line</span>
+                    <h3>CLI / Script</h3>
+                    <p>Full control with flags: workers, range, engines, batch size. Best for automation and large-scale batch processing.</p>
+                    <code>python main.py data.xlsx --scrape --headed</code>
                 </div>
             </div>
         </div>
@@ -240,7 +404,12 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>Landfill Search · <a href="https://github.com/xiaomabufei/Landfill_Search" target="_blank">GitHub</a> · macOS only · MIT License</p>
+        <p style="margin-bottom:8px;">
+            <a href="https://github.com/xiaomabufei/Landfill_Search" target="_blank">GitHub</a> ·
+            <a href="https://github.com/xiaomabufei/Landfill_Search/tree/main/docs" target="_blank">Docs</a> ·
+            macOS only
+        </p>
+        <p>Built for landfill research · Automated data collection with full source traceability</p>
     </div>
 
 </body>
