@@ -454,4 +454,4 @@ if __name__ == "__main__":
     print("  Landfill Search — Web UI")
     print("  访问: http://localhost:5000")
     print("=" * 50 + "\n")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=8000, debug=False)
