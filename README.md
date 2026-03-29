@@ -1,6 +1,8 @@
 # Landfill Search — 全球填埋场信息自动搜索与数据库构建
 
 > **平台支持**: 目前仅在 **macOS** 上测试通过。Windows / Linux 未经验证。
+>
+> 🌐 **[在线 Demo](https://xiaomabufei.github.io/Landfill_Search/)** — 查看项目主页和意大利填埋场地图展示
 
 通过 Playwright 驱动浏览器自动爬取 Google Search / Scholar / Maps，逐国采集全球填埋场的详细运营和环境数据，构建可溯源、可验证、可视化的填埋场数据库。
 
