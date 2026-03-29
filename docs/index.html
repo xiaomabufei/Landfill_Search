@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landfill Search — Global Landfill Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb; --primary-dark: #1e40af;
+            --bg: #0f172a; --bg2: #1e293b; --bg3: #334155;
+            --card: #1e293b; --border: #334155;
+            --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
+            --accent: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 50%, #0c4a6e 100%);
+            padding: 80px 24px 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px;
+                       font-weight: 600; background: rgba(56,189,248,.15); color: var(--accent);
+                       border: 1px solid rgba(56,189,248,.3); margin-bottom: 20px; letter-spacing: .5px; }
+        .hero h1 { font-size: 48px; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px;
+                    background: linear-gradient(135deg, #f1f5f9, #38bdf8); -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 18px; color: var(--text2); max-width: 640px; margin: 0 auto 32px; line-height: 1.6; }
+        .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 600;
+               text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--text2); background: var(--bg2); }
+
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 48px; padding: 40px 24px;
+                  border-bottom: 1px solid var(--border); }
+        .stat { text-align: center; }
+        .stat .num { font-size: 36px; font-weight: 800; color: var(--accent); }
+        .stat .label { font-size: 13px; color: var(--text3); margin-top: 4px; text-transform: uppercase;
+                        letter-spacing: .5px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Section */
+        .section { padding: 60px 0; }
+        .section-title { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+        .section-desc { color: var(--text2); margin-bottom: 32px; font-size: 15px; }
+
+        /* Demo iframe */
+        .demo-frame { width: 100%; height: 600px; border: 1px solid var(--border); border-radius: 12px;
+                       overflow: hidden; background: white; }
+        .demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .demo-tabs { display: flex; gap: 0; }
+        .demo-tab { padding: 8px 20px; font-size: 13px; font-weight: 500; border: 1px solid var(--border);
+                     background: var(--bg2); color: var(--text2); cursor: pointer; }
+        .demo-tab:first-child { border-radius: 6px 0 0 6px; }
+        .demo-tab:last-child { border-radius: 0 6px 6px 0; }
+        .demo-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .feature { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+        .feature .icon { font-size: 28px; margin-bottom: 12px; }
+        .feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .feature p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+        /* Architecture */
+        .arch { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px;
+                 font-family: 'Menlo', monospace; font-size: 13px; color: var(--accent); line-height: 1.8;
+                 overflow-x: auto; white-space: pre; }
+
+        /* How to use */
+        .usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .usage-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+        .usage-card .tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px;
+                            display: inline-block; margin-bottom: 12px; }
+        .usage-card .tag-app { background: rgba(74,222,128,.15); color: var(--green); }
+        .usage-card .tag-web { background: rgba(56,189,248,.15); color: var(--accent); }
+        .usage-card .tag-cli { background: rgba(251,191,36,.15); color: var(--amber); }
+        .usage-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .usage-card p { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 12px; }
+        .usage-card code { font-size: 12px; background: var(--bg); padding: 8px 12px; border-radius: 6px;
+                            display: block; color: var(--accent); }
+
+        /* Footer */
+        .footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center;
+                   color: var(--text3); font-size: 13px; }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .stats { gap: 24px; flex-wrap: wrap; }
+            .features, .usage-grid { grid-template-columns: 1fr; }
+            .demo-frame { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">macOS · Open Source · Python</div>
+        <h1>Landfill Search</h1>
+        <p>Automated global landfill database builder. Scrapes Google Search, Scholar &amp; Maps to collect landfill operational data with full source traceability.</p>
+        <div class="hero-actions">
+            <a href="#demo" class="btn btn-primary">🗺️ View Demo</a>
+            <a href="https://github.com/xiaomabufei/Landfill_Search" class="btn btn-outline" target="_blank">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                GitHub
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat"><div class="num">179</div><div class="label">Italy Landfills</div></div>
+        <div class="stat"><div class="num">18</div><div class="label">Indicators</div></div>
+        <div class="stat"><div class="num">3</div><div class="label">Search Engines</div></div>
+        <div class="stat"><div class="num">29</div><div class="label">Tests Passed</div></div>
+    </div>
+
+    <!-- Demo -->
+    <div class="section" id="demo">
+        <div class="container">
+            <div class="demo-header">
+                <div>
+                    <div class="section-title">Live Demo — Italy</div>
+                    <div class="section-desc">Interactive map with real search results from Italian landfills</div>
+                </div>
+            </div>
+            <iframe class="demo-frame" src="../assets/ITA.html" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="section">
+        <div class="container">
+            <div class="section-title">Features</div>
+            <div class="section-desc">End-to-end automated pipeline from raw data to interactive visualization</div>
+            <div class="features">
+                <div class="feature">
+                    <div class="icon">🔍</div>
+                    <h3>Automated Search</h3>
+                    <p>Playwright drives Chrome/WebKit to scrape Google Search, Google Scholar, and Google Maps. Bilingual keyword extraction (EN + IT).</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">✅</div>
+                    <h3>Data Validation</h3>
+                    <p>4-dimension check: format, logic (start_year ≤ final_year), completeness, and source verification. Errors highlighted in bold red.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">🗺️</div>
+                    <h3>Map Visualization</h3>
+                    <p>CartoDB + Leaflet.js interactive map. Color-coded markers, click for details with source links. Chart.js statistics.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">🔄</div>
+                    <h3>Resume & Incremental</h3>
+                    <p>Checkpoint resume — interrupted searches continue from where they stopped. Results saved after each landfill.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">🖥️</div>
+                    <h3>Multi-Browser Parallel</h3>
+                    <p>Auto-detects installed browsers (Chrome, WebKit, Firefox). Parallel workers with staggered delays to avoid detection.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon">📋</div>
+                    <h3>Rich Logging</h3>
+                    <p>Timestamped logs with progress bar, ETA, collapsible details. Separate error log for quick triage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Architecture -->
+    <div class="section">
+        <div class="container">
+            <div class="section-title">Architecture</div>
+            <div class="section-desc">Simple pipeline, powerful automation</div>
+            <div class="arch">Input Data ──→ Auto Search ──→ Extract ──→ Validate ──→ Output
+ .xlsx          Playwright      Keyword     Format      JSON (traceable)
+ .csv           Google Search   Rules       Logic       HTML (map + charts)
+ .tsv           Scholar/Maps    EN + IT     Sources     Logs (timestamped)
+ .json</div>
+        </div>
+    </div>
+
+    <!-- How to Use -->
+    <div class="section">
+        <div class="container">
+            <div class="section-title">3 Ways to Use</div>
+            <div class="section-desc">Choose what fits your workflow</div>
+            <div class="usage-grid">
+                <div class="usage-card">
+                    <span class="tag tag-app">macOS App</span>
+                    <h3>Desktop GUI</h3>
+                    <p>Build as a native macOS app. Enter a landfill name or select a file, click search.</p>
+                    <code>./build_app.sh</code>
+                </div>
+                <div class="usage-card">
+                    <span class="tag tag-web">Web UI</span>
+                    <h3>Browser Interface</h3>
+                    <p>Flask web app with real-time logs, file upload, and result links.</p>
+                    <code>python web_app.py</code>
+                </div>
+                <div class="usage-card">
+                    <span class="tag tag-cli">CLI</span>
+                    <h3>Command Line</h3>
+                    <p>Full control with flags: workers, range, engines, batch size.</p>
+                    <code>python main.py data/raw/ITA.xlsx --scrape --headed</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Indicators -->
+    <div class="section">
+        <div class="container">
+            <div class="section-title">18 Data Indicators</div>
+            <div class="section-desc">7 core + 11 extended, each with source reference</div>
+            <div class="features" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="feature">
+                    <h3>Core (7)</h3>
+                    <p>Landfill type · Gas collection (yes/no) · Technology type (flaring/electrification/purification) · Collection rate · Start year · Closure year · Gas system start year</p>
+                </div>
+                <div class="feature">
+                    <h3>Extended (11)</h3>
+                    <p>Capacity (m³) · Annual intake (tons) · Waste types · Area (ha) · Operator · Depth · Liner type · Leachate treatment · Status · Environmental issues · Methane emissions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Landfill Search · <a href="https://github.com/xiaomabufei/Landfill_Search" target="_blank">GitHub</a> · macOS only · MIT License</p>
+    </div>
+
+</body>
+</html>
